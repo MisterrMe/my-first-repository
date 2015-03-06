@@ -73,6 +73,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	Vectors Vr;
 	Vr = V[0] + V[1];
 	Vr.print();
+	
+	delete[] V;          //очистка памяти
+	for (i=0;i<2;i++)
+		delete[] p[i];
+	delete[] p;
 
 	system("pause");
 	return 0;
