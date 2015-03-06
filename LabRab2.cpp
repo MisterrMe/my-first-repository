@@ -56,24 +56,25 @@ for (i=0;i<7;i++)
 	number[i]=i+1;
 
 SC * C = new SC[7];
-for (i=1;i<8;i++)     //задание элементов
+for (i=0;i<7;i++)     //задание элементов
 {
-	C[i].Set_name(name[i-1]);
-	C[i].Set_number(number[i-1]);
+	C[i].Set_name(name[i]);
+	C[i].Set_number(number[i]);
 }
 
 cout<<"Введите класс защищенности";
 cin>>SN;
 
-for (i=1;i<8;i++)   //check
-	arg[i-1]=C[i].check(SN);
+for (i=0;i<7;i++)   //check
+	arg[i]=C[i].check(SN);
 
-for(i=1;i<8;i++)    //print
+for(i=0;i<7;i++)    //print
 {
-	if (arg[i-1]==1)
+	if (arg[i]==1)
 		C[i].print();
 }
 
+delete [] C;
 system("pause");
 return 0;
 }
