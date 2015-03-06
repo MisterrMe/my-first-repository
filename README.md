@@ -1,2 +1,2 @@
 # my-first-repository
-Just Repository with files
+Repository for LabRabs
