@@ -1,0 +1,66 @@
+// Создать класс "угол(заданный в градусах)"
+//Элементы класса:
+//поле задает значение угла в градусах (статус доступа private)
+//конструктор для инициализации поля
+//метод для вычисления синуса угла
+//создать 1 объект данного класса, ввести значение синуса заданного угла
+//
+
+#include "stdafx.h"
+#include <cmath>
+#include <iostream>
+using namespace std;
+
+double Pi=3.1415926535897932384626433832795;
+
+class Angle
+{
+private:
+	double Gradus;
+public:
+	Angle()
+	{
+		Gradus=0;
+	}
+	void SetDegree(int gr)
+	{
+		this->Gradus=gr;
+	}
+	void sinus()
+	{
+		double sinn;
+		double rad = (this->Gradus)/180*Pi;
+		sinn = sin((this->Gradus)/180*Pi);
+		cout << sinn << " - The value sine of the angle. \n";
+	}
+};
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	Angle *gr2= new Angle;
+	while (1)
+	{
+	int gr;
+	int a;
+	cout << "\nEnter the angle in degrees = ";
+	cin >> gr;
+	gr2->SetDegree(gr);
+	gr2->sinus();
+	while (1)
+	{
+	cout << "Refresh? (1-yes 0-no) ";
+	cin >> a;
+	if (a!=0 && a!=1)
+	{
+		cout << "Invalid input data. Re-enter.\n";
+		continue;
+	}
+	if (a==1 || a==0)
+		break;
+	}
+	if (a==0)
+		break;
+	}
+	system ("pause");
+	return 0;
+	}
