@@ -1,0 +1,292 @@
+// Street.cpp: определяет точку входа для консольного приложения.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+
+int Check()
+{
+	int a;
+	while (1)
+	{
+		std::cout << "You create an empty street.Confirm this? 1-Yes,0-No";
+		std::cin >> a;
+		if (a != 0 && a != 1)
+		{
+			std::cout << "Invalid input data. Re-enter.\n";
+			continue;
+		}
+		if (a == 1 || a == 0)
+			break;
+	}
+	return a;
+}
+
+class House
+{
+public:
+	int HomeNumber;
+	int NumberOfPeople;
+
+	House()
+	{
+		HomeNumber = 0;
+		NumberOfPeople = 0;
+	}
+	~House();
+
+	House * next;
+	House * prev;
+	House * ptr;
+};
+
+class Street
+{
+public:
+	int NumberOfHouses;
+	std::string NameStreet;
+
+	Street()
+	{
+		this->NumberOfHouses = 0;
+		this->NameStreet = "";
+	}
+	~Street();
+
+	void SetStreet(std::string NameStreet, int NumberOfHouses)
+	{
+		this->NameStreet = NameStreet;
+		this->NumberOfHouses = NumberOfHouses;
+	}
+
+	void SetFirst()
+	{
+		House *frst;
+		frst = new House();
+		frst->HomeNumber = 1;
+		std::cout << "Enter the number of residents in first house.";
+		std::cin >> frst->NumberOfPeople;
+		frst->next = frst;
+		frst->prev = frst;
+		last = frst;
+		first = frst;
+		this->NumberOfHouses = this->NumberOfHouses + 1;
+	}
+
+	void SetHouses()
+	{
+		int i;
+		while (1)
+		{
+			switch (this->NumberOfHouses)
+			{
+			case 0:
+				int a;
+				while (1)
+				{
+					a = Check();
+					if (a == 0)
+					{
+						std::cout << "Enter the new number of houses.";
+						std::cin >> this->NumberOfHouses;
+					}
+					break;
+				}
+				if (a == 1)
+					break;
+				continue;
+
+			case 1:
+				SetFirst();
+				this->NumberOfHouses = this->NumberOfHouses - 1;
+				break;
+
+			default:
+				SetFirst();
+				this->NumberOfHouses = this->NumberOfHouses - 1;
+				for (i = 1; i < this->NumberOfHouses; i++)
+				{
+					iter = first;
+					for (int j = 0; j < i; j++)
+						iter = iter->next;
+					House *tmp;
+					tmp = new House;
+					tmp->HomeNumber = i + 1;
+					std::cout << "Enter the number of residents in " << i + 1 << " house.";
+					std::cin >> tmp->NumberOfPeople;
+					tmp->next = iter;
+					tmp->prev = iter->prev;
+					iter->prev->next = tmp;
+					iter->prev = tmp;
+				}
+				break;
+			}
+			break;
+		}
+	}
+
+	void AddHouse(int n)
+	{
+		if (this->NumberOfHouses == 0)
+			SetFirst();
+		else
+		{
+			int i;
+			iter = first;
+			for (i = 0; i < n; i++)
+				iter = iter->next;
+			House *tmp;
+			tmp = new House;
+			tmp->HomeNumber = n + 1;
+			std::cout << "Enter the number of residents in " << n + 1 << " house.";
+			std::cin >> tmp->NumberOfPeople;
+			tmp->next = iter;
+			tmp->prev = iter->prev;
+			iter->prev->next = tmp;
+			iter->prev = tmp;
+
+			for (i = n; i < this->NumberOfHouses; i++)
+			{
+				iter->HomeNumber = iter->HomeNumber + 1;
+				iter = iter->next;
+			}
+			this->NumberOfHouses = this->NumberOfHouses + 1;
+		}
+	}
+
+	void DeleteHouse(int n)
+	{
+		int i;
+		iter = first;
+		for (i = 0; i < n-1; i++)
+			iter = iter->next;
+		iter->prev->next = iter->next;
+		iter->next->prev = iter->prev;
+		iter = iter->next;
+		for (i = n; i < this->NumberOfHouses; i++)
+		{
+			iter->HomeNumber = iter->HomeNumber - 1;
+			iter = iter->next;
+		}
+		this->NumberOfHouses = this->NumberOfHouses - 1;
+	}
+
+	void GetHouseData(int n)
+	{
+		int i;
+		iter = first;
+		for (i = 0; i < n - 1; i++)
+			iter = iter->next;
+		std::cout << "The number of residents is " << iter->NumberOfPeople;
+	}
+
+	void Print()
+	{
+		int num=0;
+		std::cout << this->NameStreet << " street\n";
+		iter = first;
+		for (int i = 0; i < this->NumberOfHouses; i++)
+		{
+			num = num + iter->NumberOfPeople;
+			std::cout << "House number " << iter->HomeNumber << ". Number of residents is " << iter->NumberOfPeople << "\n";
+			iter = iter->next;
+ 		}
+		std::cout << "The total number of residents is " << num << "\n";
+	}
+
+	House * last;
+	House * first;
+	House * iter;
+};
+
+void DialogWithTheUser(Street *Str)
+{
+	using namespace std;
+	string Name;
+	int Number, ch;
+	while (1)
+	{
+		cout << "\nPress: \n1-to add new house, \n2-to remove house, \n3-to get house data, \n4-to get street data, \n5-to rename street, \n0-to exit\n";
+		cin >> ch;
+		if (ch != 0 && ch != 1 && ch != 2 && ch != 3 && ch != 4 && ch != 5)
+		{
+			cout << "Invalid input data. Re-enter.\n";
+			continue;
+		}
+		if (ch == 1)
+		{
+			cout << "Enter the house number followed by addition of a new.\nIf you add the first house-enter 0\n(if the house is not the last, the numbering of the remaining will be shifted)\n";
+			while (1)
+			{
+				cin >> Number;
+				if (Number > Str->NumberOfHouses || Number<0)
+				{
+					cout << "There is no such home. Re-enter.\n";
+					continue;
+				}
+				Str->AddHouse(Number);
+				break;
+			}
+		}
+		if (ch == 2)
+		{
+			while (1)
+			{
+				cout << "Enter the number of house to remove.";
+				cin >> Number;
+				if (Number > Str->NumberOfHouses || Number < 0)
+				{
+					cout << "There is no such home. Re-enter.\n";
+					continue;
+				}
+				Str->DeleteHouse(Number);
+				break;
+			}
+		}
+		if (ch == 3)
+		{
+			while (1)
+			{
+				cout << "Enter the number of house to get data.";
+				cin >> Number;
+				if (Number > Str->NumberOfHouses || Number < 0)
+				{
+					cout << "There is no such home. Re-enter.\n";
+					continue;
+				}
+				Str->GetHouseData(Number);
+				break;
+			}
+		}
+		if (ch == 4)
+			Str->Print();
+		if (ch == 5)
+		{
+			cout << "Enter the new name of the street - ";
+			cin >> Name;
+			Str->SetStreet(Name, Str->NumberOfHouses);
+		}
+		if (ch == 0)
+			break;
+	}
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	using namespace std;
+	string Name;
+	int Number;
+	cout << "Welcome to the design of streets\n";
+	cout << "To start, enter the name of the street - ";
+	cin >> Name;
+	cout << "Very good. Now enter the number of houses - ";
+	cin >> Number;
+	Street *Str = new Street;
+	Str->SetStreet(Name, Number);
+	Str->SetHouses();
+	cout << "The street was successfully created.\nNow you can control your street\n";
+	DialogWithTheUser(Str);
+	system("pause");
+	return 0;
+}
