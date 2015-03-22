@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include <string>
+#include "Street.h"
 
 int Check()
 {
@@ -66,7 +67,16 @@ public:
 		frst = new House();
 		frst->HomeNumber = 1;
 		std::cout << "Enter the number of residents in first house.";
-		std::cin >> frst->NumberOfPeople;
+		while (1)
+		{
+			std::cin >> frst->NumberOfPeople;
+			if (frst->NumberOfPeople < 0)
+			{
+				std::cout << "Number of people in first house can not be negative. Re-enter. ";
+				continue;
+			}
+			break;
+		}
 		frst->next = frst;
 		frst->prev = frst;
 		last = frst;
@@ -114,7 +124,16 @@ public:
 					tmp = new House;
 					tmp->HomeNumber = i + 1;
 					std::cout << "Enter the number of residents in " << i + 1 << " house.";
-					std::cin >> tmp->NumberOfPeople;
+					while (1)
+					{
+						std::cin >> tmp->NumberOfPeople;
+						if (tmp->NumberOfPeople < 0)
+						{
+							std::cout << "Number of people in " << i + 1 << " house can not be negative. Re-enter. ";
+							continue;
+						}
+						break;
+					}
 					tmp->next = iter;
 					tmp->prev = iter->prev;
 					iter->prev->next = tmp;
@@ -140,7 +159,16 @@ public:
 			tmp = new House;
 			tmp->HomeNumber = n + 1;
 			std::cout << "Enter the number of residents in " << n + 1 << " house.";
-			std::cin >> tmp->NumberOfPeople;
+			while (1)
+			{
+				std::cin >> tmp->NumberOfPeople;
+				if (tmp->NumberOfPeople < 0)
+				{
+					std::cout << "Number of people in " << n + 1 << " house can not be negative. Re-enter. ";
+					continue;
+				}
+				break;
+			}
 			tmp->next = iter;
 			tmp->prev = iter->prev;
 			iter->prev->next = tmp;
@@ -272,7 +300,7 @@ void DialogWithTheUser(Street *Str)
 	}
 }
 
-int _tmain(int argc, _TCHAR* argv[])
+int main()
 {
 	using namespace std;
 	string Name;
@@ -281,7 +309,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "To start, enter the name of the street - ";
 	cin >> Name;
 	cout << "Very good. Now enter the number of houses - ";
-	cin >> Number;
+	while (1)
+	{
+		cin >> Number;
+		if (Number < 0)
+		{
+			cout << "Number of houses can not be negative. Re-enter. ";
+			continue;
+		}
+		break;
+	}
 	Street *Str = new Street;
 	Str->SetStreet(Name, Number);
 	Str->SetHouses();
