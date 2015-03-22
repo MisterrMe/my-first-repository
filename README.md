@@ -1,2 +1,2 @@
 # my-first-repository
-Repository for LabRabs(Visual Studio Labs)
+Repository for TipDz(Visual Studio Labs)
