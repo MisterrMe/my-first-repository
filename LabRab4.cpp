@@ -3,35 +3,30 @@
 #include "stdafx.h"
 #include <iostream>
 using namespace std;
-
-class Vector 
+class Vector
 {
 protected:
-	double x, y; 
+	double x, y;
 	double len;
 public:
-	Vector (double x, double y)
+	Vector(double x, double y)
 	{
 		this->x = x; this->y = y;
 	}
-
 	void Length()
 	{
 		this->len = sqrt(x*x + y*y);
 	}
-
-	void PrintCoordinate()
+	virtual void PrintCoordinate()
 	{
 		cout << "\nx=" << x << " y=" << y;
 	}
-
-	void PrintLenght()
+	virtual void PrintLenght()
 	{
 		cout << "\nlenght=" << len;
 	}
 };
-
-class Vector3d : protected Vector 
+class Vector3d : public Vector
 {
 	double z;
 public:
@@ -39,26 +34,28 @@ public:
 	{
 		this->z = z;
 	}
-	void Print()
+	void PrintCoordinate()
 	{
-		Vector::PrintCoordinate(); 
+		Vector::PrintCoordinate();
 		cout << " z=" << z;
-		cout << "\nlenght=" << sqrt(x*x+y*y+z*z);
+	}
+	void PrintLenght()
+	{
+		cout << "\nlenght=" << sqrt(x*x + y*y + z*z) << "\n";
 	}
 };
-
 int main(int argc, char* argv[])
 {
 	Vector p1(1, 2);
-	Vector3d p2(3, 4, 5);
-	Vector *pp1;
-	Vector3d *pp2;
-	pp1 = &p1; 
-	pp1->PrintCoordinate(); 
-	pp1->Length();
-	pp1->PrintLenght();
-	pp2 = &p2;
-	pp2->Print();
+	Vector3d p2(1, 2, 3);
+	Vector *pp;
+	pp = &p1;
+	pp->PrintCoordinate();
+	pp->Length();
+	pp->PrintLenght();
+	pp = &p2;
+	pp->PrintCoordinate();
+	pp->PrintLenght();
 	system("pause");
 	return 0;
 }
