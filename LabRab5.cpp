@@ -31,7 +31,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 	// Инициализация глобальных строк
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadString(hInstance, IDC_WIN32PROJECT5, szWindowClass, MAX_LOADSTRING);
+	LoadString(hInstance, IDC_WIN32PROJECT1, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
 
 	// Выполнить инициализацию приложения:
@@ -40,7 +40,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WIN32PROJECT5));
+	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WIN32PROJECT1));
 
 	// Цикл основного сообщения:
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -73,10 +73,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbClsExtra		= 0;
 	wcex.cbWndExtra		= 0;
 	wcex.hInstance		= hInstance;
-	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WIN32PROJECT5));
+	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WIN32PROJECT1));
 	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
-	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_WIN32PROJECT5);
+	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_WIN32PROJECT1);
 	wcex.lpszClassName	= szWindowClass;
 	wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -362,7 +362,7 @@ void MyParall::draw(int Reg) // Метод рисования фигуры
 	DeleteObject(pen); // Удаляем перо
 }
 
-Figure *pF[9];
+Figure *pF[501];
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -374,19 +374,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 		SetTimer(hWnd, 1, 20, 0);
-		pF[0] = new MyPolygon(110, -4, 12, 0, RGB(250, 50, 250), hWnd, 5);
-		pF[1] = new MyPolygon(150, 4, 10, 0, RGB(50, 250, 250), hWnd, 6);
-		pF[2] = new MyPolygon(70, 6, 8, 1, RGB(250, 250, 50), hWnd, 7);
-		pF[3] = new MyTreug(40, 10, 13, 1, RGB(250, 150, 50), hWnd);
-		pF[4] = new MyTreug(60, -8, 12, 0, RGB(50, 250, 150), hWnd);
-		pF[5] = new MyTreug(80, -10, 8, 1, RGB(150, 50, 250), hWnd);
-		pF[6] = new MyParall(80, -1, 4, 1, RGB(50, 50, 50), hWnd);
-		pF[7] = new MyParall(60, 2, 6, 0, RGB(150, 150, 0), hWnd);
-		pF[8] = new MyParall(40, 1, 10, 1, RGB(150, 150, 250), hWnd);
-
+		srand(time(NULL));
+		int a[3],b[2],c,d,e;
+		for (int j=0;j<167;j++)
+		{
+			for (int k=0;k<3;k++)
+			{
+				for (int i =0;i<3;i++)
+					a[i]=1+rand()%250;
+				for (int i=0;i<2;i++)
+					b[i]=1+rand()%10;
+				c=rand()%2;
+				d=4+rand()%5;
+				e=10+rand()%50;
+				switch (k)
+				{
+					case 0:
+						pF[3*j] = new MyPolygon(e,b[0],b[1], c, RGB(a[1],a[2],a[3]), hWnd, d);
+						break;
+					case 1:
+						pF[3*j+1] = new MyTreug(e,b[0],b[1], c, RGB(a[1],a[2],a[3]), hWnd);
+						break;
+					case 2:
+						pF[3*j+2] = new MyParall(e,b[0],b[1], c, RGB(a[1],a[2],a[3]), hWnd);
+						break;
+				}
+			}
+		}
 		break;
 	case WM_TIMER:
-		for (int i = 0; i<9; i++)
+		for (int i = 0; i<501; i++)
 		{
 			pF[i]->draw(0);
 			pF[i]->step();
