@@ -1,189 +1,116 @@
-#include "Street.h"
+#include "street.h"
 #include <iostream>
+#include <string>
 
 Street::Street()
 {
 	this->NumberOfHouses = 0;
 	this->NameStreet = "";
 }
+
 Street::~Street()
 {}
 
-void Street::SetStreet(std::string NameStreet, int NumberOfHouses)
+const int Street::GetNumberOfHouses() const
+{
+	return this->NumberOfHouses;
+}
+
+const std::string Street::GetNameStreet() const
+{
+	return this->NameStreet;
+}
+
+void Street::SetStreet(const std::string NameStreet, const int NumberOfHouses)
 {
 	this->NameStreet = NameStreet;
 	this->NumberOfHouses = NumberOfHouses;
 }
 
-void Street::SetFirst()
+void Street::SetHouses(int *Value)
 {
-	House *frst;
-	frst = new House();
-	frst->HomeNumber = 1;
-	std::cout << "Enter the number of residents in first house.";
-	while (1)
+	for (int i = 0; i < this->NumberOfHouses; i++)
 	{
-		std::cin >> frst->NumberOfPeople;
-		if (frst->NumberOfPeople < 0)
-		{
-			std::cout << "Number of people in first house can not be negative. Re-enter. ";
-			continue;
-		}
-		break;
+		House *src;
+		src = new House();
+		src->setHomeNumber(i + 1);
+		src->setNumberOfPeople(Value[i]);
+		list.push_back(*src);
+		delete src;
 	}
-	frst->next = frst;
-	frst->prev = frst;
-	last = frst;
-	first = frst;
+}
+
+void Street::AddHouse(const int n, const int p)
+{
+	House *src;
+	src = new House();
+	src->setHomeNumber(n);
+	src->setNumberOfPeople(p);
+	if (n == 1)
+	{
+		list.push_front(*src);
+		iter = list.begin();
+		++iter;
+		for (int i = n; i < NumberOfHouses + 1; i++)
+		{
+			iter->setHomeNumber(iter->getHomeNumber() + 1);
+			++iter;
+		}
+	}
+	if (n == this->NumberOfHouses + 1)
+		list.push_back(*src);
+	if (n>1 && n<this->NumberOfHouses + 1)
+	{
+		iter = list.begin();
+		for (int i = 0; i < n - 1; i++)
+			++iter;
+		list.insert(iter, *src);
+		for (int i = n; i < NumberOfHouses + 1; i++)
+		{
+			iter->setHomeNumber(iter->getHomeNumber() + 1);
+			++iter;
+		}
+	}
 	this->NumberOfHouses = this->NumberOfHouses + 1;
-}
-
-void Street::SetHouses()
-{
-	int i;
-	while (1)
-	{
-		switch (this->NumberOfHouses)
-		{
-		case 0:
-			int a;
-			while (1)
-			{
-				while (1)
-				{
-					std::cout << "You create an empty street.Confirm this? 1-Yes,0-No";
-					std::cin >> a;
-					if (a != 0 && a != 1)
-					{
-						std::cout << "Invalid input data. Re-enter.\n";
-						continue;
-					}
-					if (a == 1 || a == 0)
-						break;
-				}
-				if (a == 0)
-				{
-					std::cout << "Enter the new number of houses.";
-					std::cin >> this->NumberOfHouses;
-				}
-				break;
-			}
-			if (a == 1)
-				break;
-			continue;
-
-		case 1:
-			SetFirst();
-			this->NumberOfHouses = this->NumberOfHouses - 1;
-			break;
-
-		default:
-			SetFirst();
-			this->NumberOfHouses = this->NumberOfHouses - 1;
-			for (i = 1; i < this->NumberOfHouses; i++)
-			{
-				iter = first;
-				for (int j = 0; j < i; j++)
-					iter = iter->next;
-				House *tmp;
-				tmp = new House;
-				tmp->HomeNumber = i + 1;
-				std::cout << "Enter the number of residents in " << i + 1 << " house.";
-				while (1)
-				{
-					std::cin >> tmp->NumberOfPeople;
-					if (tmp->NumberOfPeople < 0)
-					{
-						std::cout << "Number of people in " << i + 1 << " house can not be negative. Re-enter. ";
-						continue;
-					}
-					break;
-				}
-				tmp->next = iter;
-				tmp->prev = iter->prev;
-				iter->prev->next = tmp;
-				iter->prev = tmp;
-			}
-			break;
-		}
-		break;
-	}
-}
-
-void Street::AddHouse(int n)
-{
-	if (this->NumberOfHouses == 0)
-		SetFirst();
-	else
-	{
-		int i;
-		iter = first;
-		for (i = 0; i < n; i++)
-			iter = iter->next;
-		House *tmp;
-		tmp = new House;
-		tmp->HomeNumber = n + 1;
-		std::cout << "Enter the number of residents in " << n + 1 << " house.";
-		while (1)
-		{
-			std::cin >> tmp->NumberOfPeople;
-			if (tmp->NumberOfPeople < 0)
-			{
-				std::cout << "Number of people in " << n + 1 << " house can not be negative. Re-enter. ";
-				continue;
-			}
-			break;
-		}
-		tmp->next = iter;
-		tmp->prev = iter->prev;
-		iter->prev->next = tmp;
-		iter->prev = tmp;
-
-		for (i = n; i < this->NumberOfHouses; i++)
-		{
-			iter->HomeNumber = iter->HomeNumber + 1;
-			iter = iter->next;
-		}
-		this->NumberOfHouses = this->NumberOfHouses + 1;
-	}
+	delete src;
 }
 
 void Street::DeleteHouse(int n)
 {
-	int i;
-	iter = first;
-	for (i = 0; i < n - 1; i++)
-		iter = iter->next;
-	iter->prev->next = iter->next;
-	iter->next->prev = iter->prev;
-	iter = iter->next;
-	for (i = n; i < this->NumberOfHouses; i++)
+	iter = list.begin();
+	for (int i = 0; i < n - 1; i++)
+		++iter;
+	iter = list.erase(iter);
+	for (int i = n; i < NumberOfHouses; i++)
 	{
-		iter->HomeNumber = iter->HomeNumber - 1;
-		iter = iter->next;
+		iter->setHomeNumber(iter->getHomeNumber() - 1);
+		++iter;
 	}
 	this->NumberOfHouses = this->NumberOfHouses - 1;
 }
 
 void Street::GetHouseData(int n)
 {
-	int i;
-	iter = first;
+	int i, a;
+	iter = list.begin();
 	for (i = 0; i < n - 1; i++)
-		iter = iter->next;
-	std::cout << "The number of residents is " << iter->NumberOfPeople;
+		++iter;
+	a = iter->getNumberOfPeople();
+	std::cout << "The number of residents is " << a;
 }
 
 void Street::Print()
 {
 	int num = 0;
 	std::cout << this->NameStreet << " street\n";
-	iter = first;
+	iter = list.begin();
 	for (int i = 0; i < this->NumberOfHouses; i++)
 	{
-		num = num + iter->NumberOfPeople;
-		std::cout << "House number " << iter->HomeNumber << ". Number of residents is " << iter->NumberOfPeople << "\n";
-		iter = iter->next;
+		int a = iter->getNumberOfPeople();
+		num = num + a;
+		std::cout << "House number " << iter->getHomeNumber() << ". Number of residents is " << iter->getNumberOfPeople() << "\n";
+		++iter;
 	}
 	std::cout << "The total number of residents is " << num << "\n";
+	std::cout << "The totel number of houses is " << this->NumberOfHouses << "\n";
 }
