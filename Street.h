@@ -1,29 +1,25 @@
-#ifndef __STREET_H
-#define __STREET_H
+// Copyright 2015 <Mikhail Shturov>
+#pragma once
 
-#include "House.h"
+#include <list>
 #include <string>
+#include "house.h"
 
-class Street
-{
-public:
-	int NumberOfHouses;
-	std::string NameStreet;
-
-	Street();
-	~Street();
-
-	void SetStreet(std::string NameStreet, int NumberOfHouses);
-	void SetFirst();
-	void SetHouses();
-	void AddHouse(int n);
-	void DeleteHouse(int n);
-	void GetHouseData(int n);
-	void Print();
-
-	House * last;
-	House * first;
-	House * iter;
+class Street{
+ private:
+    int NumberOfHouses;
+    std::string NameStreet;
+ public:
+    std::list<House> list;
+    std::list<House>::iterator iter;
+    Street();
+    ~Street();
+    const int GetNumberOfHouses() const;
+    const std::string GetNameStreet() const;
+    void SetStreet(const std::string NameStreet, const int NumberOfHouses);
+    void SetHouses(int *Value);
+    void AddHouse(const int n, const int p);
+    void DeleteHouse(int n);
+    void GetHouseData(int n);
+    void Print();
 };
-
-#endif
