@@ -1,9 +1,6 @@
-// StreetDesigner.cpp: определяет точку входа для консольного приложения.
-//
-
+#include "street.h"
 #include <iostream>
 #include <string>
-#include "Street.h"
 
 void DialogWithTheUser(Street *Str)
 {
@@ -21,16 +18,29 @@ void DialogWithTheUser(Street *Str)
 		}
 		if (ch == 1)
 		{
-			cout << "Enter the house number followed by addition of a new.\nIf you add the first house-enter 0\n(if the house is not the last, the numbering of the remaining will be shifted)\n";
+			cout << "Enter the number of house in front of which will be new.\nIf you add the last house-enter a number one greater than the number of homes\n(if the house is not the last, the numbering of the remaining will be shifted)\n";
 			while (1)
 			{
 				cin >> Number;
-				if (Number > Str->NumberOfHouses || Number<0)
+				if (Number > Str->GetNumberOfHouses() + 1 || Number<1)
 				{
 					cout << "There is no such home. Re-enter.\n";
 					continue;
 				}
-				Str->AddHouse(Number);
+
+				cout << "Enter the number of residents in " << Number << " house.";
+				int people;
+				while (1)
+				{
+					cin >> people;
+					if (people < 0)
+					{
+						cout << "Number of people in " << Number + 1 << " house can not be negative. Re-enter. ";
+						continue;
+					}
+					break;
+				}
+				Str->AddHouse(Number, people);
 				break;
 			}
 		}
@@ -40,7 +50,7 @@ void DialogWithTheUser(Street *Str)
 			{
 				cout << "Enter the number of house to remove.";
 				cin >> Number;
-				if (Number > Str->NumberOfHouses || Number < 0)
+				if (Number > Str->GetNumberOfHouses() || Number < 0)
 				{
 					cout << "There is no such home. Re-enter.\n";
 					continue;
@@ -55,7 +65,7 @@ void DialogWithTheUser(Street *Str)
 			{
 				cout << "Enter the number of house to get data.";
 				cin >> Number;
-				if (Number > Str->NumberOfHouses || Number < 0)
+				if (Number > Str->GetNumberOfHouses() || Number < 0)
 				{
 					cout << "There is no such home. Re-enter.\n";
 					continue;
@@ -70,14 +80,14 @@ void DialogWithTheUser(Street *Str)
 		{
 			cout << "Enter the new name of the street - ";
 			cin >> Name;
-			Str->SetStreet(Name, Str->NumberOfHouses);
+			Str->SetStreet(Name, Str->GetNumberOfHouses());
 		}
 		if (ch == 0)
 			break;
 	}
 }
 
-int main()
+void Create(Street *Str)
 {
 	using namespace std;
 	string Name;
@@ -94,13 +104,61 @@ int main()
 			cout << "Number of houses can not be negative. Re-enter. ";
 			continue;
 		}
-		break;
+		if (Number == 0)
+		{
+			int a;
+			while (1)
+			{
+				cout << "You create an empty street.Confirm this? 1-Yes,0-No";
+				cin >> a;
+				if (a != 0 && a != 1)
+				{
+					cout << "Invalid input data. Re-enter.\n";
+					continue;
+				}
+				if (a == 1 || a == 0)
+					break;
+			}
+			if (a == 0)
+			{
+				cout << "Enter the new number of houses.";
+				continue;
+			}
+			if (a == 1)
+				break;
+		}
+		if (Number > 0)
+		{
+			break;
+		}
+		continue;
 	}
-	Street *Str = new Street;
+	int *value = new int[Number];
+	for (int i = 0; i < Number; i++)
+	{
+		cout << "Enter the number of residents in " << i + 1 << " house.";
+		while (1)
+		{
+			cin >> value[i];
+			if (value[i] < 0)
+			{
+				std::cout << "Number of people in " << i + 1 << " house can not be negative. Re-enter. ";
+				continue;
+			}
+			break;
+		}
+	}
 	Str->SetStreet(Name, Number);
-	Str->SetHouses();
+	Str->SetHouses(value);
 	cout << "The street was successfully created.\nNow you can control your street\n";
+	delete[] value;
+}
+
+int main()
+{
+	using namespace std;
+	Street *Str = new Street;
+	Create(Str);
 	DialogWithTheUser(Str);
-	system("pause");
 	return 0;
 }
