@@ -1,18 +1,18 @@
-#ifndef __HOUSE_H
-#define __HOUSE_H
+// Copyright 2015 <Mikhail Shturov>
+#pragma once
 
-class House
-{
-public:
-	int HomeNumber;
-	int NumberOfPeople;
-
-	House();
-	~House();
-
-	House * next;
-	House * prev;
-	House * ptr;
+class House{
+ private:
+    int HomeNumber;
+    int NumberOfPeople;
+ public:
+    House();
+    ~House();
+    House(const House &src);
+    const int getHomeNumber() const;
+    void setHomeNumber(int a);
+    const int getNumberOfPeople() const;
+    void setNumberOfPeople(int a);
+    House &operator=(const House &src);
+    bool operator==(const House &src) const;
 };
-
-#endif
