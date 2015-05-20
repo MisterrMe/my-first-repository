@@ -3,23 +3,27 @@
 
 #include <list>
 #include <string>
-#include "house.h"
+#include "./house.h"
 
 class Street{
  private:
-    int NumberOfHouses;
+    int Length;
     std::string NameStreet;
+    std::list<House> houses;
  public:
-    std::list<House> list;
-    std::list<House>::iterator iter;
     Street();
     ~Street();
     const int GetNumberOfHouses() const;
     const std::string GetNameStreet() const;
-    void SetStreet(const std::string NameStreet, const int NumberOfHouses);
-    void SetHouses(int *Value);
-    void AddHouse(const int n, const int p);
-    void DeleteHouse(int n);
-    void GetHouseData(int n);
+    void SetNameStreet(const std::string & NameStreet);
+    void SetLenStreet(const int & NumberOfHouses);
+    void SetHouses(const int *Value, const int & Number);
+    void AddHouse(const int & n, const int & p);
+    void DeleteHouse(const int n);
+    const int GetHouseData(const int n);
+    const int GetNumberOfHouses();
+    House& Get(const int & n);
     void Print();
+    Street &operator=(const Street &src);
+    bool operator==(const Street &src) const;
 };
