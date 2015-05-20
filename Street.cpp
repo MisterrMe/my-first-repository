@@ -1,10 +1,10 @@
 // Copyright 2015 <Mikhail Shturov>
 #include <iostream>
 #include <string>
-#include "street.h"
+#include <list>
+#include "./street.h"
 
 Street::Street() {
-    this->NumberOfHouses = 0;
     this->NameStreet = "";
 }
 
@@ -12,85 +12,81 @@ Street::~Street() {
 }
 
 const int Street::GetNumberOfHouses() const {
-    return this->NumberOfHouses;
+    return houses.size();
 }
 
 const std::string Street::GetNameStreet() const {
     return this->NameStreet;
 }
 
-void Street::SetStreet(const std::string NameStreet, const int NumberOfHouses) {
+void Street::SetNameStreet(const std::string & NameStreet) {
     this->NameStreet = NameStreet;
-    this->NumberOfHouses = NumberOfHouses;
 }
 
-void Street::SetHouses(int *Value) {
-    for (int i = 0; i < this->NumberOfHouses; i++) {
-        House *src;
-        src = new House();
-        src->setHomeNumber(i + 1);
-        src->setNumberOfPeople(Value[i]);
-        list.push_back(*src);
-        delete src;
+void Street::SetLenStreet(const int & length) {
+    this->Length = length;
+}
+
+void Street::SetHouses(const int *Value, const int & Number) {
+    for (int i = 0; i < Number; i++) {
+        House src;
+        src.setHomeNumber(i + 1);
+        src.setNumberOfPeople(Value[i]);
+        houses.push_back(src);
     }
 }
 
-void Street::AddHouse(const int n, const int p) {
+void Street::AddHouse(const int & n, const int & p) {
+    std::list<House>::iterator iter;
     House *src;
     src = new House();
     src->setHomeNumber(n);
     src->setNumberOfPeople(p);
-    if (n == 1) {
-        list.push_front(*src);
-        iter = list.begin();
+    iter = houses.begin();
+    std::advance(iter, n - 1);
+    houses.insert(iter, *src);
+    for (double i = n; i < houses.size(); i++) {
+        iter->setHomeNumber(iter->getHomeNumber() + 1);
         ++iter;
-        for (int i = n; i < NumberOfHouses + 1; i++) {
-            iter->setHomeNumber(iter->getHomeNumber() + 1);
-            ++iter;
-        }
     }
-    if (n == this->NumberOfHouses + 1)
-        list.push_back(*src);
-    if (n > 1 && n < this->NumberOfHouses + 1) {
-        iter = list.begin();
-        for (int i = 0; i < n - 1; i++)
-            ++iter;
-        list.insert(iter, *src);
-        for (int i = n; i < NumberOfHouses + 1; i++) {
-            iter->setHomeNumber(iter->getHomeNumber() + 1);
-            ++iter;
-        }
-    }
-    this->NumberOfHouses = this->NumberOfHouses + 1;
     delete src;
 }
 
-void Street::DeleteHouse(int n) {
-    iter = list.begin();
-    for (int i = 0; i < n - 1; i++)
-        ++iter;
-    iter = list.erase(iter);
-    for (int i = n; i < NumberOfHouses; i++) {
+void Street::DeleteHouse(const int n) {
+    std::list<House>::iterator iter;
+    iter = houses.begin();
+    std::advance(iter, n-1);
+    iter = houses.erase(iter);
+    for (double i = n; i < houses.size() + 1; i++) {
         iter->setHomeNumber(iter->getHomeNumber() - 1);
         ++iter;
     }
-    this->NumberOfHouses = this->NumberOfHouses - 1;
 }
 
-void Street::GetHouseData(int n) {
-    int i, a;
-    iter = list.begin();
-    for (i = 0; i < n - 1; i++)
-        ++iter;
-    a = iter->getNumberOfPeople();
-    std::cout << "The number of residents is " << a;
+const int Street::GetHouseData(const int n) {
+    std::list<House>::iterator iter;
+    iter = houses.begin();
+    std::advance(iter, n - 1);
+    return iter->getNumberOfPeople();
+}
+
+const int Street::GetNumberOfHouses() {
+    return houses.size();
+}
+
+House& Street::Get(const int & n) {
+    std::list<House>::iterator iter;
+    iter = houses.begin();
+    std::advance(iter, n - 1);
+    return *iter;
 }
 
 void Street::Print() {
+    std::list<House>::iterator iter;
     int num = 0;
     std::cout << this->NameStreet << " street\n";
-    iter = list.begin();
-    for (int i = 0; i < this->NumberOfHouses; i++) {
+    iter = houses.begin();
+    for (double i = 0; i < houses.size(); i++) {
         int a = iter->getNumberOfPeople();
         num = num + a;
         std::cout << "House number ";
@@ -99,8 +95,21 @@ void Street::Print() {
         std::cout << iter->getNumberOfPeople() << "\n";
         ++iter;
     }
+    std::cout << "The total length of street is ";
+    std::cout << this->Length << "\n";
     std::cout << "The total number of residents is ";
     std::cout << num << "\n";
     std::cout << "The totel number of houses is ";
-    std::cout << this->NumberOfHouses << "\n";
+    std::cout << houses.size() << "\n";
+}
+
+Street & Street ::operator=(const Street &src) {
+    if (this != &src) {
+        this->NameStreet = src.NameStreet;
+    }
+    return *this;
+}
+
+bool Street::operator==(const Street &src) const {
+    return (this->NameStreet == src.NameStreet);
 }
