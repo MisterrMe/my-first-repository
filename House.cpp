@@ -1,5 +1,5 @@
 // Copyright 2015 <Mikhail Shturov>
-#include "house.h"
+#include "./house.h"
 
 House::House() {
     HomeNumber = 0;
@@ -31,13 +31,14 @@ void House::setNumberOfPeople(int a) {
 }
 
 House & House ::operator=(const House &src) {
-    this->HomeNumber = src.HomeNumber;
-    this->NumberOfPeople = src.NumberOfPeople;
+    if (this != &src) {
+        this->HomeNumber = src.HomeNumber;
+        this->NumberOfPeople = src.NumberOfPeople;
+    }
     return *this;
 }
 
 bool House::operator==(const House &src) const {
-    if (this->HomeNumber != src.HomeNumber) return 0;
-    if (this->NumberOfPeople != src.NumberOfPeople) return 0;
-    return 1;
+    return (this->HomeNumber == src.HomeNumber &&
+        this->NumberOfPeople == src.NumberOfPeople);
 }
