@@ -1,6 +1,7 @@
 #include <conio.h>
 #include <iostream>
 #include <locale.h>
+#include <windows.h>
 
 using namespace std;
 int main()
